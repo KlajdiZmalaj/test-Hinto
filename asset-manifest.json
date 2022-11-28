@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/hinto-test/static/css/main.88ea0194.css",
+    "main.js": "/hinto-test/static/js/main.3741f872.js",
+    "static/media/bg.jpg": "/hinto-test/static/media/bg.95a3cdd34dcac7420958.jpg",
+    "index.html": "/hinto-test/index.html",
+    "main.88ea0194.css.map": "/hinto-test/static/css/main.88ea0194.css.map",
+    "main.3741f872.js.map": "/hinto-test/static/js/main.3741f872.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88ea0194.css",
+    "static/js/main.3741f872.js"
+  ]
+}
