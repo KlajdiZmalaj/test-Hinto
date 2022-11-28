@@ -1,4 +1,4 @@
-import { createContext, FC, ReactComponentElement, useCallback, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 export type Post = {
   id: number;
@@ -11,7 +11,7 @@ type PostsContextType = {
   posts: Post[];
   setPosts: (posts: Post[]) => void;
   loadingPosts?: boolean;
-  setLoadingPosts?: (value: boolean) => void;
+  setLoadingPosts?: (loadingPosts: boolean) => void;
 };
 
 // default context with no-op values
@@ -21,12 +21,13 @@ const PostsContext = createContext<PostsContextType>({
   setPosts: () => undefined,
   setLoadingPosts: () => undefined,
 });
+
 type Props = {
   children: JSX.Element | JSX.Element[] | string | string[] | React.ReactNode | React.ReactChild;
 };
 export const PostsProvider: React.FC<Props> = ({ children }) => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const handleOnPosts = useCallback(
     (updatedPosts: Post[]) => {
       setPosts([...posts, ...updatedPosts]);
