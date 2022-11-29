@@ -15,8 +15,8 @@ export default () => {
     setLoadingPosts?.(true);
     //Get posts based on _start then set to context
     getPosts({ _start: _start * PER_PAGE, _limit: PER_PAGE }).then((data) => {
-      //on scroll we keep old data on pagination we override
-      setPosts(type === "scroll" ? [...posts, ...data] : [...data]);
+      //on scroll we keep old data on pagination we override, only we set prev [] if its start=0 (switch from pagination ex page:7)
+      setPosts(type === "scroll" ? [...(_start === 0 ? [] : posts), ...data] : [...data]);
       setLoadingPosts?.(false);
     });
   }, [_start]);
