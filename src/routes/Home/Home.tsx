@@ -9,18 +9,26 @@ export const MAX_PAGE = 100;
 export default () => {
   const { posts, setPosts, loadingPosts, setLoadingPosts } = usePosts();
   const [_start, setStart] = useState(0);
+  const [type, setType] = useState("scroll");
+
   useEffect(() => {
     setLoadingPosts?.(true);
     //Get posts based on _start then set to context
     getPosts({ _start: _start * PER_PAGE, _limit: PER_PAGE }).then((data) => {
-      setPosts(data);
+      //on scroll we keep old data on pagination we override
+      setPosts(type === "scroll" ? [...posts, ...data] : [...data]);
       setLoadingPosts?.(false);
     });
   }, [_start]);
 
+  useEffect(() => {
+    //when type changes table starts from begining
+    setStart(0);
+  }, [type]);
+
   return (
     <div className="home page">
-      <Table start={_start} setStart={setStart} posts={posts} />
+      <Table type={type} setType={setType} start={_start} setStart={setStart} posts={posts} />
       {loadingPosts && (
         <div className="loading">
           Loading Posts

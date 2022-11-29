@@ -1,40 +1,85 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 import { Post } from "../../providers/PostsContext";
-import { MAX_PAGE } from "../../routes/Home/Home";
-
+import { MAX_PAGE, PER_PAGE } from "../../routes/Home/Home";
+import PaginationComp from "../../components/Pagination/index";
 type propTypes = {
   posts: Post[];
   start: number;
   setStart: (start: number) => void;
+  setType: (type: string) => void;
+  type: string;
 };
 type rowTypes = {
   hasDetails: boolean;
 };
-export default ({ posts, start, setStart }: propTypes) => {
+type buttonTypes = {
+  isActive: boolean;
+};
+type tableBodyTypes = {
+  isPagination?: boolean;
+};
+export default ({ posts, start, setStart, type, setType }: propTypes) => {
+  const renderPosts = useCallback(
+    () =>
+      posts.map((post) => {
+        return <TableRowComp key={post.id} post={post} />;
+      }),
+    [posts],
+  );
   return (
     <Table className="animate__animated animate__bounceInUp">
+      <ButtonsContainer>
+        <Button
+          isActive={type === "scroll"}
+          onClick={() => {
+            setType("scroll");
+          }}
+        >
+          Ininite scroll
+        </Button>
+        <Button
+          isActive={type === "pagination"}
+          onClick={() => {
+            setType("pagination");
+          }}
+        >
+          With pagination
+        </Button>
+      </ButtonsContainer>
       <TableHeader>
         <span>ID</span>
         <span>User ID</span>
         <span>Title</span>
       </TableHeader>
-      <TableBody
-        onScroll={(e: any) => {
-          const containerHeight = e.target?.getBoundingClientRect?.()?.height;
-          const scollTop = e.target.scrollTop;
-          const scollHeight = e.target.scrollHeight;
-          if (containerHeight + scollTop >= scollHeight && start * 10 < MAX_PAGE) {
-            //if its scolled To  bottom | has reached limit on db
-            setStart(start + 1);
-          }
-          console.log("ca ka e", containerHeight, scollTop, e.target);
-        }}
-      >
-        {posts.map((post) => {
-          return <TableRowComp key={post.id} post={post} />;
-        })}
-      </TableBody>
+      {type === "scroll" && (
+        <TableBody
+          onScroll={(e: any) => {
+            const containerHeight = e.target?.getBoundingClientRect?.()?.height;
+            const scollTop = e.target.scrollTop;
+            const scollHeight = e.target.scrollHeight;
+            if (containerHeight + scollTop >= scollHeight && start * 10 < MAX_PAGE) {
+              //if its scolled To  bottom | has reached limit on db
+              setStart(start + 1);
+            }
+            // console.log("ca ka e", containerHeight, scollTop, e.target);
+          }}
+        >
+          {renderPosts()}
+        </TableBody>
+      )}
+      {type === "pagination" && (
+        <TableBody isPagination>
+          {renderPosts()}
+          <PaginationComp
+            className="pagination-bar"
+            currentPage={start}
+            totalCount={MAX_PAGE}
+            pageSize={PER_PAGE}
+            onPageChange={(page: any) => setStart(page)}
+          />
+        </TableBody>
+      )}
     </Table>
   );
 };
@@ -69,6 +114,37 @@ const TableRowComp = ({ post }: { post: Post }) => {
 };
 
 //STYLED COMPONETS
+
+const ButtonsContainer = styled.div`
+  display: flex;
+  height: 50px;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #ffffff1f;
+`;
+const Button = styled.button<buttonTypes>`
+  display: flex;
+  border: 1px solid #2da542;
+  color: #2da542;
+  background-color: #fff;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
+  padding: 0 5px;
+  cursor: pointer;
+  position: relative;
+  :after {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    display: ${({ isActive }) => (isActive ? "block" : "none")};
+    background-color: #2da542;
+  }
+`;
 const Table = styled.div`
   width: 90%;
   display: flex;
@@ -117,28 +193,28 @@ const TableHeader = styled.div`
     padding-right: 25px;
   }
 `;
-const TableBody = styled.div`
+const TableBody = styled.div<tableBodyTypes>`
   display: flex;
   flex-flow: column;
   //To make 9 visible => 10th does the request
-  height: calc(40px * 9);
+  height: ${({ isPagination }) => (isPagination ? "440px" : "calc(40px * 9)")};
   overflow: auto;
   overflow-x: hidden;
 `;
 const TableRow = styled.div<rowTypes>`
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: #ffffff17;
   transition: all 0.3s;
   border-left: 4px solid transparent;
   border-left-color: ${({ hasDetails }) => (hasDetails ? "#2da5426e" : "transparent")};
   :hover {
-    background-color: #fcfcfc;
+    background-color: #ffffff21;
   }
   :nth-child(odd) {
-    background-color: #2da54214;
+    background-color: #ffffff2f;
     :hover {
-      background-color: #2da5431c;
+      background-color: #ffffff3d;
     }
   }
   cursor: pointer;
@@ -154,7 +230,7 @@ const TableRowDetails = styled.div`
   border-left: 4px solid #2da5426e;
   text-transform: capitalize;
   box-shadow: inset 0 0 17px -12px #000;
-  background-color: #fff;
+  background-color: #ffffff0d;
   h3 {
     margin: 0;
     font-size: 16px;

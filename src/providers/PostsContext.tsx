@@ -30,7 +30,7 @@ export const PostsProvider: React.FC<Props> = ({ children }) => {
   const [loadingPosts, setLoadingPosts] = useState<boolean>(false);
   const handleOnPosts = useCallback(
     (updatedPosts: Post[]) => {
-      setPosts([...posts, ...updatedPosts]);
+      setPosts(updatedPosts);
       setLoadingPosts(false);
     },
     [posts],
