@@ -1,11 +1,12 @@
-# Infinite Table
+# Infinite/Paginated Table
 
 Hinto task by Klajdi zmalaj
 
 ## Features
 
 - Infinite scroll with api
-- React + Typescript
+- Pagination with api
+- React + Typescript + Hooks
 - Context
 - Styled componets
 
