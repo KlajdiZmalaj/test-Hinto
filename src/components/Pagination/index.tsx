@@ -25,7 +25,7 @@ const Pagination = (props: any) => {
   return (
     <ul className={"pagination-container pagination-bar"}>
       {/* Left navigation arrow */}
-      <li className={"pagination-item" + (currentPage === 1 ? " disabled" : "")} onClick={onPrevious}>
+      <li className={"pagination-item" + (currentPage === 0 ? " disabled" : "")} onClick={onPrevious}>
         <div className="arrow left" />
       </li>
       {paginationRange.map((pageNumber = 0 as any) => {
@@ -47,7 +47,7 @@ const Pagination = (props: any) => {
         );
       })}
       {/*  Right Navigation arrow */}
-      <li className={"pagination-item" + (currentPage === lastPage ? " disabled" : "")} onClick={onNext}>
+      <li className={"pagination-item" + (currentPage === lastPage - 1 ? " disabled" : "")} onClick={onNext}>
         <div className="arrow right" />
       </li>
     </ul>
